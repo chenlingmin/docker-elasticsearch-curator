@@ -1,18 +1,23 @@
-#!/bin/bash
+#!/bin/sh
 
-set -ex
+set -e
 
-# Add curator as command if needed
-if [ "${1:0:1}" = '-' ]; then
-	set -- curator "$@"
-fi
-
-# Step down via gosu  
-if [ "$1" = 'curator' ]; then
-	exec gosu curator bash -c "while true; do curator --host $ELASTICSEARCH_HOST delete indices --older-than $OLDER_THAN_IN_DAYS --time-unit=days --timestring '%Y.%m.%d'; set -e; sleep $(( 60*60*INTERVAL_IN_HOURS )); set +e; done"
-fi
-
-# As argument is not related to curator,
-# then assume that user wants to run his own process,
-# for example a `bash` shell to explore this image
-exec "$@"
+while true; do
+    echo Running delete_indices
+    curator_cli \
+        --host $ELASTICSEARCH_HOST \
+        delete_indices --ignore_empty_list \
+        --filter_list "[{
+            \"filtertype\":\"age\",
+            \"source\":\"creation_date\",
+            \"direction\":\"older\",
+            \"timestring\":\"%Y.%m.%d\",
+            \"unit\":\"days\",
+            \"unit_count\":$OLDER_THAN_IN_DAYS
+          },{
+            \"filtertype\":\"pattern\",
+            \"kind\":\"prefix\",
+            \"value\":\"logstash-\"
+          }]"
+    sleep ${INTERVAL_IN_HOURS}h
+done
