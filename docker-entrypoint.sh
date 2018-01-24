@@ -13,7 +13,7 @@ while true; do
             \"direction\":\"older\",
             \"timestring\":\"%Y.%m.%d\",
             \"unit\":\"days\",
-            \"unit_count\":$OLDER_THAN_IN_DAYS
+            \"unit_count\":$DELETE_THAN_IN_DAYS
           },{
             \"filtertype\":\"pattern\",
             \"kind\":\"prefix\",
