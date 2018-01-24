@@ -4,7 +4,7 @@ This only job executed by the docker built from this repository is to clean the 
 
 It can be run as follows:
 
-	docker run -d -e INTERVAL_IN_HOURS=24 -e DELETE_THAN_IN_DAYS="20" -e CLOSE_THAN_IN_DAYS="10" --link es1:elasticsearch chenlmdocker/elasticsearch-curator
+	docker run -d -e INTERVAL_IN_HOURS=24 -e DELETE_THAN_IN_DAYS="20" -e CLOSE_THAN_IN_DAYS="10" --link es1:elasticsearch chenlmdocker/docker-elasticsearch-curator
 	
 where **es1** is the name of the elasticsearch container and
 
